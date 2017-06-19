@@ -1,101 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8"/>
-    <style>
-      td, tr {
-        width: 50px;
-        height: 50px;
-      }
-      img.frame {
-        height: 40px;
-        width : 40px;
-        margin-left: 5px;
-        margin-top : 2px;
-      }
-      span.frame {
-        position: absolute;
-        top : 13px;
-        left: 17px;
-      }
-      div.frame {
-        position: relative;
-        cursor  : pointer;
-      }
-
-      img.white {
-        transform: rotate(180deg);
-      }
-      span.white {
-        transform: rotate(180deg);
-        top : 5px;
-        left: 17px;
-      }
-    </style>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="default.css">
   </head>
+
   <body>
+    <div id="captured_white" class="captured"></div>
     <div id="ban"></div>
+    <div id="captured_black" class="captured"></div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript">
-      function Koma(name, pos, is_white) {
-        this.name = name;
-        this.position = pos;
-        this.is_white = is_white;
-      }
-
-      var koma = new Array();
-      koma.push(new Koma("金", 0, true));
-      koma.push(new Koma("王", 1, true));
-      koma.push(new Koma("銀", 2, true));
-      koma.push(new Koma("香", 6, false));
-      koma.push(new Koma("王", 7, false));
-      koma.push(new Koma("角", 8, false));
-
-      function create_image(koma){
-        var img = $("<img>");
-        img.attr("src", "frame.png");
-        img.addClass("frame");
-        if(koma.is_white){ img.addClass("white"); }
-
-        var span = $("<span>");
-        span.text(koma.name);
-        span.addClass("frame");
-        if(koma.is_white){ span.addClass("white"); }
-        span.append(img);
-
-        var div = $("<div>");
-        div.addClass("frame");
-        div.append(span);
-        div.append(img);
-        div.click(function(){
-          var tds = $("#ban").find("td");
-        });
-        return div;
-      }
-
-      (function(){
-       // create field
-       var n = 3;
-       var table = $("<table border='1'>");
-       for(var i = 0; i < n; i++){
-         var tr = $("<tr>");
-         for(var j = 0; j < n; j++){
-           tr.append($("<td>"));
-         }
-         table.append(tr);
-       }
-       $("#ban").append(table)
-
-       // arange
-       var tds = $("#ban").find("td");
-       for(var i = 0; i < koma.length; i++){
-         var k = koma[i];
-         var td = tds.get(k.position);
-         $(td).append(create_image(k));
-       };
-      })()
-    </script>
+    <script src="koma.js"></script>
+    <script src="main.js"></script>
   </body>
 </html>
 
