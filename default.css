@@ -21,6 +21,10 @@ div.frame {
   cursor  : pointer;
 }
 
+td.mark {
+  background: yellow;
+}
+
 td.current {
   background: lime;
 }

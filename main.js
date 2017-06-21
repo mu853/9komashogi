@@ -38,6 +38,35 @@ function create_field(){
   $("#ban").append(table)
 }
 
+function mark(i){
+  var target = new Array(
+    i, i + 1, i - 1,
+    i + n, i + n + 1, i + n - 1,
+    i - n, i - n + 1, i - n - 1
+  );
+  var tds = $("#ban").find("td");
+  for(var j = 0; j < target.length; j++){
+    k = target[j];
+    if(current.canmoveto(k)){
+      $(tds[k]).addClass("mark");
+    }
+  }
+}
+
+function unmark(i){
+  var target = new Array(
+    i, i + 1, i - 1,
+    i + n, i + n + 1, i + n - 1,
+    i - n, i - n + 1, i - n - 1
+  );
+  var tds = $("#ban").find("td");
+  for(var j = 0; j < target.length; j++){
+    k = target[j]
+    $(tds[k]).removeClass("mark");
+  }
+}
+
+
 (function(){
   create_field();
 
@@ -59,12 +88,15 @@ function create_field(){
          }
          var current_td = $(tds[current.position]);
          current_td.removeClass("current");
+         unmark(current.position);
          current = k;
          td.addClass("current");
+         mark(i);
          return;
        }
 
        if(!current.canmoveto(i)){ return; }
+       unmark(current.position);
 
        if(current.position < 0){
          current_span.remove();
@@ -105,6 +137,7 @@ function create_field(){
        if(k && k.is_white != teban_is_black){
          td.addClass("current");
          current = k;
+         mark(i);
        }
      }
    });
