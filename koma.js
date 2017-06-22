@@ -4,8 +4,9 @@ function Fu(pos, is_white){
   this.is_white = is_white;
   this.captured = false;
   this.canmoveto = function(i){
+    if(this.position < 0){ return true; }
     if(koma_of_myteam_exists(i, this)){ return false; }
-    if(i == this.position) { return false }
+    if(i == this.position) { return false; }
     if(this.is_white){
       return (i == this.position + n);
     }else{
@@ -20,9 +21,9 @@ function King(pos, is_white){
   this.is_white = is_white;
   this.captured = false;
   this.canmoveto = function(i){
+    if(this.position < 0){ return true; }
     if(koma_of_myteam_exists(i, this)){ return false; }
-    console.log("i=" + i);
-    if(i == this.position) { return false }
+    if(i == this.position) { return false; }
     if(Math.abs(i % n - this.position % n) <= 1){
       return Math.abs(
           Math.floor(i / n) - Math.floor(this.position / n)
@@ -38,14 +39,16 @@ function Gold(pos, is_white){
   this.is_white = is_white;
   this.captured = false;
   this.canmoveto = function(i){
+    if(this.position < 0){ return true; }
     if(koma_of_myteam_exists(i, this)){ return false; }
-    if(i == this.position) { return false }
+    if(koma_of_myteam_exists(i, this)){ return false; }
+    if(i == this.position) { return false; }
     if(is_white){
-      if(i == this.position - (n + 1)){ return false }
-      if(i == this.position - (n - 1)){ return false }
+      if(i == this.position - (n + 1)){ return false; }
+      if(i == this.position - (n - 1)){ return false; }
     }else{
-      if(i == this.position + (n + 1)){ return false }
-      if(i == this.position + (n - 1)){ return false }
+      if(i == this.position + (n + 1)){ return false; }
+      if(i == this.position + (n - 1)){ return false; }
     }
     if(Math.abs(i % n - this.position % n) <= 1){
       return Math.abs(
@@ -61,12 +64,14 @@ function Silver(pos, is_white){
   this.is_white = is_white;
   this.captured = false;
   this.canmoveto = function(i){
+    if(this.position < 0){ return true; }
     if(koma_of_myteam_exists(i, this)){ return false; }
-    if(Math.abs(i - this.position) <= 1) { return false }
+    if(koma_of_myteam_exists(i, this)){ return false; }
+    if(Math.abs(i - this.position) <= 1) { return false; }
     if(is_white){
-      if(i == this.position - n){ return false }
+      if(i == this.position - n){ return false; }
     }else{
-      if(i == this.position + n){ return false }
+      if(i == this.position + n){ return false; }
     }
     if(Math.abs(i % n - this.position % n) <= 1){
       return Math.abs(
@@ -82,10 +87,11 @@ function Kyo(pos, is_white){
   this.is_white = is_white;
   this.captured = false;
   this.canmoveto = function(i){
+    if(this.position < 0){ return true; }
     if(koma_of_myteam_exists(i, this)){ return false; }
     if(i % n == this.position % n){
-      if(this.is_white && i > this.position){ return true }
-      if(!this.is_white && i < this.position){ return true }
+      if(this.is_white && i > this.position){ return true; }
+      if(!this.is_white && i < this.position){ return true; }
     }
     return false;
   }
@@ -97,6 +103,7 @@ function Kaku(pos, is_white){
   this.is_white = is_white;
   this.captured = false;
   this.canmoveto = function(i){
+    if(this.position < 0){ return true; }
     if(koma_of_myteam_exists(i, this)){ return false; }
     var diff = i - this.position;
     if(diff % (n + 1) == 0){
