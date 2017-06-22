@@ -39,30 +39,18 @@ function create_field(){
 }
 
 function mark(i){
-  var target = new Array(
-    i, i + 1, i - 1,
-    i + n, i + n + 1, i + n - 1,
-    i - n, i - n + 1, i - n - 1
-  );
   var tds = $("#ban").find("td");
-  for(var j = 0; j < target.length; j++){
-    k = target[j];
-    if(current.canmoveto(k)){
-      $(tds[k]).addClass("mark");
+  for(var j = 0; j < n * n; j++){
+    if(current.canmoveto(j)){
+      $(tds[j]).addClass("mark");
     }
   }
 }
 
 function unmark(i){
-  var target = new Array(
-    i, i + 1, i - 1,
-    i + n, i + n + 1, i + n - 1,
-    i - n, i - n + 1, i - n - 1
-  );
   var tds = $("#ban").find("td");
-  for(var j = 0; j < target.length; j++){
-    k = target[j]
-    $(tds[k]).removeClass("mark");
+  for(var j = 0; j < n * n; j++){
+    $(tds[j]).removeClass("mark");
   }
 }
 
