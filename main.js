@@ -54,6 +54,45 @@ function unmark(i){
   }
 }
 
+function select(k){
+  current = k;
+  var tds = $("#ban").find("td");
+  $(tds[k.position]).addClass("current");
+  mark(k.position);
+}
+
+function deselect(){
+  //motigoma
+  if(current_span){
+    current_span.removeClass("current");
+  }
+
+  //field
+  if(current.position < 0){ return; }
+
+  var tds = $("#ban").find("td");
+  var current_td = $(tds[current.position]);
+  current_td.removeClass("current");
+
+  unmark(current.position);
+}
+
+function reselect(k){
+  deselect();
+  select(k)
+}
+
+function delete_current_selection(){
+  deselect();
+
+  if(current.position < 0){
+    current_span.remove();
+  }else{
+    var tds = $("#ban").find("td");
+    var current_td = $(tds[current.position]);
+    current_td.empty();
+  }
+}
 
 (function(){
   create_field();
@@ -70,30 +109,17 @@ function unmark(i){
    td.click(function(){
      var k = get_koma_by_position(i);
      if(current){
+       //selected koma is in myteam.
        if(k && k.is_white != teban_is_black){
-         if(current_span){
-           current_span.removeClass("current");
-         }
-         var current_td = $(tds[current.position]);
-         current_td.removeClass("current");
-         unmark(current.position);
-         current = k;
-         td.addClass("current");
-         mark(i);
+         reselect(k);
          return;
        }
 
+       //move current koma to i
        if(!current.canmoveto(i)){ return; }
-       unmark(current.position);
+       delete_current_selection();
 
-       if(current.position < 0){
-         current_span.remove();
-       }else{
-         var current_td = $(tds[current.position]);
-         current_td.removeClass("current");
-         current_td.empty();
-       }
-
+       //get opponent koma
        if(k){
          k.captured = true;
          k.position = -1;
