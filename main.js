@@ -145,8 +145,37 @@ function judge_upstart(k, from){
   }
 }
 
+function select_koma(){
+  var koma_list = new Array(Gold, Silver, Kyo, Kaku, Fu, Fu);
+  var arr = new Array();
+  
+  var r = Math.floor(Math.random() * koma_list.length);
+  var k = koma_list[r];
+  var p = Math.floor(Math.random() * n);
+  arr.push(new k(p, true));
+  var p2 = Math.floor(Math.random() * n);
+  while(p == p2){
+    p2 = Math.floor(Math.random() * n);
+  }
+  arr.push(new King(p2, true));
+  
+  r = Math.floor(Math.random() * koma_list.length);
+  k = koma_list[r];
+  var p = n * (n - 1) + Math.floor(Math.random() * n);
+  arr.push(new k(p, false));
+  var p2 = n * (n - 1) + Math.floor(Math.random() * n);
+  while(p == p2){
+    p2 = n * (n - 1) + Math.floor(Math.random() * n);
+  }
+  arr.push(new King(p2, false));
+  return arr;
+}
+
+var koma = null;
+
 (function(){
   create_field();
+  koma = select_koma();
 
   // arange
   var tds = $("#ban").find("td");
@@ -159,41 +188,43 @@ function judge_upstart(k, from){
     var td = $(this);
     td.click(function(){
       var k = get_koma_by_position(i);
-      if(current){
-        var current_is_motigoma = current.position < 0;
-        
-        //selected koma is in myteam.
-        if(k && k.is_white != teban_is_black){
-          reselect(k);
-          return;
-        }
-        
-        if(k && current_is_motigoma){ return; }
- 
-        //// move current koma to i
-        if(!current.canmoveto(i)){ return; }
-        delete_current();
- 
-        //get opponent koma
-        if(k){ get_opponent_koma(k); }
- 
-        //put koma to i
-        var from = current.position;
-        current.position = i;
-        current.captured = false;
-        if(!current_is_motigoma){ judge_upstart(current, from); }
-        td.append(create_field_koma(current));
-        current = null;
- 
-        //teban change
-        teban_is_black = !teban_is_black;
-      }else{
+      
+      if(!current){
         if(k && k.is_white != teban_is_black){
           td.addClass("current");
           current = k;
           mark(i);
         }
+        return;
       }
+      
+      var current_is_motigoma = current.position < 0;
+      
+      //selected koma is in myteam.
+      if(k && k.is_white != teban_is_black){
+        reselect(k);
+        return;
+      }
+      
+      if(k && current_is_motigoma){ return; }
+ 
+      //// move current koma to i
+      if(!current.canmoveto(i)){ return; }
+      delete_current();
+ 
+      //get opponent koma
+      if(k){ get_opponent_koma(k); }
+ 
+      //put koma to i
+      var from = current.position;
+      current.position = i;
+      current.captured = false;
+      if(!current_is_motigoma){ judge_upstart(current, from); }
+      td.append(create_field_koma(current));
+      current = null;
+ 
+      //teban change
+      teban_is_black = !teban_is_black;
     });
   });
 })()

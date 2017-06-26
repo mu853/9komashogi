@@ -106,6 +106,8 @@ function Silver(pos, is_white){
   Silver.prototype.clear = function(){
     this.captured = true;
     this.position = -1;
+    this.is_upstart = false;
+    this.canmoveto = Silver.prototype.canmoveto;
   }
   Silver.prototype.canmoveto = function(i){
     if(this.position < 0){ return true; }
@@ -226,7 +228,6 @@ function koma_of_myteam_exists(i, koma){
   return k && k.is_white == koma.is_white;
 }
 
-
 function get_koma_by_position(pos){
   for(var i = 0; i < koma.length; i++){
     if(!koma[i].captured && koma[i].position == pos){
@@ -236,11 +237,12 @@ function get_koma_by_position(pos){
   return null;
 }
 
-var koma = new Array();
-koma.push(new Gold(0, true));
-koma.push(new King(1, true));
-koma.push(new Silver(2, true));
-koma.push(new Kyo(8, false));
-koma.push(new King(7, false));
-koma.push(new Kaku(6, false));
-koma.push(new Fu(4, false));
+//var koma = new Array();
+//koma.push(new Gold(0, true));
+//koma.push(new King(1, true));
+//koma.push(new Silver(2, true));
+//koma.push(new Kyo(8, false));
+//koma.push(new King(7, false));
+//koma.push(new Kaku(6, false));
+//koma.push(new Fu(4, false));
+
