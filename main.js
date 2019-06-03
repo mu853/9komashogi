@@ -1,4 +1,5 @@
 var n = 3;
+var m = 3;
 var current = null;
 var current_span = null;
 var teban_is_black = true;
@@ -128,9 +129,9 @@ function get_opponent_koma(k){
 
 function is_opponent_area(is_white, i){
   if(is_white){
-    return Math.floor(i / n) == n - 1;
+    return Math.floor(i / n) >= (n - m);
   }
-  return Math.floor(i / n) == 0;
+  return Math.floor(i / n) < m;
 }
 
 function judge_upstart(k, from){
@@ -146,7 +147,7 @@ function judge_upstart(k, from){
 }
 
 function select_koma(){
-  var koma_list = new Array(Gold, Silver, Kyo, Kaku, Fu, Fu);
+  var koma_list = new Array(Gold, Silver, Kei, Kyo, Kaku, Fu, Fu);
   var arr = new Array();
   
   var r = Math.floor(Math.random() * koma_list.length);
@@ -171,11 +172,50 @@ function select_koma(){
   return arr;
 }
 
+function init_koma(){
+  var arr = new Array();
+  for(var i = 0; i < 9; i++){
+    arr.push(new Fu(n * (m - 1) + i, true));
+    arr.push(new Fu(n * (n - m) + i, false));
+  }
+  arr.push(new Kyo(0, true));
+  arr.push(new Kei(1, true));
+  arr.push(new Silver(2, true));
+  arr.push(new Gold(3, true));
+  arr.push(new King(4, true));
+  arr.push(new Gold(5, true));
+  arr.push(new Silver(6, true));
+  arr.push(new Kei(7, true));
+  arr.push(new Kyo(8, true));
+  arr.push(new Hi(10, true));
+  arr.push(new Kaku(16, true));
+
+  arr.push(new Kyo(72, false));
+  arr.push(new Kei(73, false));
+  arr.push(new Silver(74, false));
+  arr.push(new Gold(75, false));
+  arr.push(new King(76, false));
+  arr.push(new Gold(77, false));
+  arr.push(new Silver(78, false));
+  arr.push(new Kei(79, false));
+  arr.push(new Kyo(80, false));
+  arr.push(new Kaku(64, false));
+  arr.push(new Hi(70, false));
+
+  return arr;
+}
+
 var koma = null;
+var is_game_finished = false;
 
 (function(){
   create_field();
-  koma = select_koma();
+
+  if(n == 9 && m == 3){
+    koma = init_koma();
+  }else{
+    koma = select_koma();
+  }
 
   // arange
   var tds = $("#ban").find("td");
@@ -187,6 +227,8 @@ var koma = null;
   tds.each(function(i){
     var td = $(this);
     td.click(function(){
+      if(is_game_finished){ return; }
+
       var k = get_koma_by_position(i);
       
       if(!current){
@@ -210,6 +252,14 @@ var koma = null;
  
       //// move current koma to i
       if(!current.canmoveto(i)){ return; }
+
+      if(k && (k instanceof King)){
+        deselect();
+        is_game_finished = true;
+        window.alert("あなたの勝ち！");
+        return;
+      }
+
       delete_current();
  
       //get opponent koma

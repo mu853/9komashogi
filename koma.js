@@ -10,6 +10,9 @@ function Fu(pos, is_white){
   }
   Fu.prototype.upstart = function(){
     this.is_upstart = true;
+    if(!Gold.prototype.canmoveto){
+      new Gold(-1, true);
+    }
     this.canmoveto = Gold.prototype.canmoveto;
   }
   Fu.prototype.clear = function(){
@@ -101,6 +104,9 @@ function Silver(pos, is_white){
   }
   Silver.prototype.upstart = function(){
     this.is_upstart = true;
+    if(!Gold.prototype.canmoveto){
+      new Gold(-1, true);
+    }
     this.canmoveto = Gold.prototype.canmoveto;
   }
   Silver.prototype.clear = function(){
@@ -127,6 +133,47 @@ function Silver(pos, is_white){
   }
 }
 
+function Kei(pos, is_white){
+  Kei.prototype.name = "桂";
+  Kei.prototype.name_upstart = "圭";
+  this.position = pos;
+  this.is_white = is_white;
+  this.captured = false;
+  this.is_upstart = false;
+  Kei.prototype.get_name = function(){
+    return (this.is_upstart ? this.name_upstart : this.name);
+  }
+  Kei.prototype.upstart = function(){
+    this.is_upstart = true;
+    if(!Gold.prototype.canmoveto){
+      new Gold(-1, true);
+    }
+    this.canmoveto = Gold.prototype.canmoveto;
+  }
+  Kei.prototype.clear = function(){
+    this.captured = true;
+    this.position = -1;
+    this.is_upstart = false;
+    this.canmoveto = Kei.prototype.canmoveto;
+  }
+  Kei.prototype.canmoveto = function(i){
+    if(this.position < 0){
+      return !is_opponent_area(this.is_white, i);
+    }
+    if(koma_of_myteam_exists(i, this)){ return false; }
+    if(this.is_white){
+      if(i == this.position + (n * 2 - 1) || i == this.position + (n * 2 + 1)){
+        return true;
+      }
+    }else{
+      if(i == this.position - (n * 2 - 1) || i == this.position - (n * 2 + 1)){
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
 function Kyo(pos, is_white){
   Kyo.prototype.name = "香";
   Kyo.prototype.name_upstart = "杏";
@@ -139,6 +186,9 @@ function Kyo(pos, is_white){
   }
   Kyo.prototype.upstart = function(){
     this.is_upstart = true;
+    if(!Gold.prototype.canmoveto){
+      new Gold(-1, true);
+    }
     this.canmoveto = Gold.prototype.canmoveto;
   }
   Kyo.prototype.clear = function(){
@@ -157,12 +207,12 @@ function Kyo(pos, is_white){
         for(var p = this.position + n; p < i; p += n){
           if(get_koma_by_position(p)){ return false; }
         }
-        return this.is_white && i > this.position;
+        return i > this.position;
       }else{
         for(var p = this.position - n; p > i; p -= n){
           if(get_koma_by_position(p)){ return false; }
         }
-        return !this.is_white && i < this.position;
+        return i < this.position;
       }
     }
     return false;
@@ -214,6 +264,65 @@ function Kaku(pos, is_white){
       if(Math.floor(i / n - x) == Math.floor(this.position / n)){
         for(var j = 1; j < Math.abs(x); j++){
           var p = this.position + (n - 1) * (x >= 0 ? j : -j);
+          if(get_koma_by_position(p)){ return false; }
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+function Hi(pos, is_white){
+  Hi.prototype.name = "飛";
+  Hi.prototype.name_upstart = "龍";
+  this.position = pos;
+  this.is_white = is_white;
+  this.captured = false;
+  this.is_upstart = false;
+  Hi.prototype.get_name = function(){
+    return (this.is_upstart ? this.name_upstart : this.name);
+  }
+  Hi.prototype.upstart = function(){
+    this.is_upstart = true;
+  }
+  Hi.prototype.clear = function(){
+    this.captured = true;
+    this.position = -1;
+    this.is_upstart = false;
+  }
+  Hi.prototype.canmoveto = function(i){
+    if(this.position < 0){ return true; }
+    if(koma_of_myteam_exists(i, this)){ return false; }
+    if(this.is_upstart){
+      //Add King power.
+      if(Math.abs(i % n - this.position % n) <= 1){
+        if(Math.abs(Math.floor(i / n) - Math.floor(this.position / n)) <= 1){
+          return true;
+        }
+      }
+    }
+    if(i % n == this.position % n){
+      if(i > this.position){
+        for(var p = this.position + n; p < i; p += n){
+          if(get_koma_by_position(p)){ return false; }
+        }
+        return true;
+      }else{
+        for(var p = this.position - n; p > i; p -= n){
+          if(get_koma_by_position(p)){ return false; }
+        }
+        return true;
+      }
+    }
+    if(Math.floor(i / n) == Math.floor(this.position / n)){
+      if(i > this.position){
+        for(var p = this.position + 1; p < i; p += 1){
+          if(get_koma_by_position(p)){ return false; }
+        }
+        return true;
+      }else{
+        for(var p = this.position - 1; p > i; p -= 1){
           if(get_koma_by_position(p)){ return false; }
         }
         return true;
